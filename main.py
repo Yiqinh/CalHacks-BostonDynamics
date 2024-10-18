@@ -13,7 +13,6 @@ def capture_image():
     rv, image = camera_capture.read()
     print(f"Image Dimensions: {image.shape}")
     camera_capture.release()
-    cv2.imwrite(f'/merklebot/job_data/camera_{time.time()}.jpg', image)
 
 
 def main():
@@ -25,7 +24,7 @@ def main():
     os.system(cmd)
     print("Playing sound")
     os.system(f"ffplay -nodisp -autoexit -loglevel quiet {sample_name}")
-    
+
     # # Capture image
 
     # Use wrapper in context manager to lease control, turn on E-Stop, power on the robot and stand up at start
