@@ -2,7 +2,6 @@ import os
 import time
 from spot_controller import SpotController
 import cv2
-import math
 
 ROBOT_IP = "192.168.80.3"#os.environ['ROBOT_IP']
 SPOT_USERNAME = "admin"#os.environ['SPOT_USERNAME']
@@ -33,22 +32,24 @@ def main():
     with SpotController(username=SPOT_USERNAME, password=SPOT_PASSWORD, robot_ip=ROBOT_IP) as spot:
 
         time.sleep(2)
+        capture_image()
         # Move head to specified positions with intermediate time.sleep
-        spot.move_head_in_points(yaws=[0.0, 0, 0, 0, 0, 0.5, -0.5, 0.5, -0.5, 0],
-                                 pitches=[0.5, -0.5, 0.5, -0.5, 0,0,0,0,0,0],
-                                 rolls=[0.0, 0, 0, 0, 0,0,0,0,0,0],
-                                 sleep_after_point_reached=0.3)
-        spot.make_stance(0.5, 0)
-        spot.make_stance(0, 0.5)
-        spot.make_stance(-0.5, 0)
-        spot.make_stance(0, -0.5)
-        spot.make_stance(1, 0)
-        spot.make_stance(0, 1)
-        spot.make_stance(-1, 0)
-        spot.make_stance(0, -1)
+        spot.move_head_in_points(yaws=[0.2, 0],
+                                 pitches=[0.3, 0],
+                                 rolls=[0.4, 0],
+                                 sleep_after_point_reached=1)
+        capture_image()
+        time.sleep(3)
 
-        spot.move_by_velocity_control(0, 0, math.pi / 4, 8)
+        # Make Spot to move by goal_x meters forward and goal_y meters left
+        spot.move_to_goal(goal_x=0.5, goal_y=0)
+        time.sleep(3)
+        capture_image()
 
+        # Control Spot by velocity in m/s (or in rad/s for rotation)
+        spot.move_by_velocity_control(v_x=-0.3, v_y=0, v_rot=0, cmd_duration=2)
+        capture_image()
+        time.sleep(3)
 
 
 if __name__ == '__main__':
