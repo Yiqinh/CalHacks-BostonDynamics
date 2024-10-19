@@ -1,0 +1,23 @@
+{
+    "image": "docker pull ghcr.io/yiqinh/calhacks-bostondynamics:main",
+    "container_name": "",
+    "ports": [],
+    "network_mode": "host",
+    "volumes": [
+      {
+        "key": "/dev/video0",
+        "value": "/dev/video0"
+      },
+      {
+        "key": "/dev/snd",
+        "value": "/dev/snd"
+      }
+    ],
+    "privileged": true,
+    "store_data": false,
+    "env": [
+      "SDL_AUDIODRIVER=alsa",
+      "AUDIODEV=hw:1,0",
+      "AUDIO_INPUT_DEVICE=hw:2,0"
+    ]
+  }
