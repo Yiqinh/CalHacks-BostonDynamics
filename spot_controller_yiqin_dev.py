@@ -90,7 +90,7 @@ class SpotController:
                 out = cv2.rotate(out, cv2.ROTATE_180)
 
         # Write the image out.
-        filename = f'/home/calhacks/yiqin/CalHacks-BostonDynamics/{camera}.jpg'
+        filename = f'/tmp/{camera}.jpg'
         cv2.imwrite(filename, out)
 
 
