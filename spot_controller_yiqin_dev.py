@@ -50,7 +50,7 @@ class SpotController:
 
         self.state_client = self.robot.ensure_client(RobotStateClient.default_service_name)
 
-        image_client = self.robot.ensure_client(ImageClient.default_service_name)
+        self.image_client = self.robot.ensure_client(ImageClient.default_service_name)
 
     def image(self):
         print("testing image capture!")
