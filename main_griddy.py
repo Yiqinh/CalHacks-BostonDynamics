@@ -18,11 +18,16 @@ def main():
 def perform_griddy(controller):
     # Step 1: Stand up and set neutral stance
     controller.stand_at_height(body_height=0.0)
-    time.sleep(1)
+    time.sleep(0.5)
 
-    controller.move_head_in_points(yaws=[0], pitches=[0.3], rolls=[0], sleep_after_point_reached=0.3)
+    controller.move_head_in_points(yaws=[0], pitches=[0.3], rolls=[0], sleep_after_point_reached=0.1)
 
-    controller.move_to_goal(goal_x=1, goal_y=0)
+    controller.move_to_goal(goal_x=0.5, goal_y=0)
+    time.sleep(0.1)
+
+    controller.move_head_in_points(yaws=[0], pitches=[0.3], rolls=[0], sleep_after_point_reached=0.1)
+
+    controller.move_to_goal(goal_x=0.5, goal_y=0)
     time.sleep(1)
 
     # Step 2: Simulate skipping footwork using velocity control and leg lifting
