@@ -31,13 +31,13 @@ def perform_griddy(controller):
         time.sleep(0.3)
 
         # Lift front-left leg, then back-right leg to simulate skipping
-        controller.make_stance(x_offset=0.2, y_offset=0.1)  # Lift front-left leg
-        time.sleep(0.3)
-        controller.make_stance(x_offset=-0.2, y_offset=-0.1)  # Lift back-right leg
-        time.sleep(0.3)
+        # controller.make_stance(x_offset=0.2, y_offset=0.1)  # Lift front-left leg
+        # time.sleep(0.3)
+        # controller.make_stance(x_offset=-0.2, y_offset=-0.1)  # Lift back-right leg
+        # time.sleep(0.3)
 
     # Step 3: Head bobbing with pitch control (up and down movement)
-    for _ in range(4):
+    for _ in range(2):
         controller.move_head_in_points(yaws=[0, 0], pitches=[0.3, -0.3], rolls=[0, 0], sleep_after_point_reached=0.3)
         time.sleep(1)
 
