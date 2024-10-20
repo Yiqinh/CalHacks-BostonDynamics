@@ -1,7 +1,6 @@
 import os
 import time
 from spot_controller import SpotController
-import cv2
 import math
 
 ROBOT_IP = "192.168.80.3"#os.environ['ROBOT_IP']
@@ -10,21 +9,22 @@ SPOT_PASSWORD = "2zqa8dgw7lor"#os.environ['SPOT_PASSWORD']
 
 
 def capture_image():
-    camera_capture = cv2.VideoCapture(0)
-    rv, image = camera_capture.read()
-    print(f"Image Dimensions: {image.shape}")
-    camera_capture.release()
+#    camera_capture = cv2.VideoCapture(0)
+#    rv, image = camera_capture.read()
+#    print(f"Image Dimensions: {image.shape}")
+#    camera_capture.release()
+    pass
 
 
 def main():
     #example of using micro and speakers
-    print("Start recording audio")
-    sample_name = "aaaa.wav"
-    cmd = f'arecord -vv --format=cd --device={os.environ["AUDIO_INPUT_DEVICE"]} -r 48000 --duration=10 -c 1 {sample_name}'
-    print(cmd)
-    os.system(cmd)
-    print("Playing sound")
-    os.system(f"ffplay -nodisp -autoexit -loglevel quiet {sample_name}")
+    #print("Start recording audio")
+    #sample_name = "aaaa.wav"
+    #cmd = f'arecord -vv --format=cd --device={os.environ["AUDIO_INPUT_DEVICE"]} -r 48000 --duration=10 -c 1 {sample_name}'
+    #print(cmd)
+    #os.system(cmd)
+    #print("Playing sound")
+    #os.system(f"ffplay -nodisp -autoexit -loglevel quiet {sample_name}")
 
     # # Capture image
 
@@ -34,9 +34,9 @@ def main():
 
         time.sleep(2)
         # Move head to specified positions with intermediate time.sleep
-        spot.move_head_in_points(yaws=[0.0, 0, 0, 0, 0, 0.5, -0.5, 0.5, -0.5, 0],
-                                 pitches=[0.5, -0.5, 0.5, -0.5, 0,0,0,0,0,0],
-                                 rolls=[0.0, 0, 0, 0, 0,0,0,0,0,0],
+        spot.move_head_in_points(yaws=[0, 0],
+                                 pitches=[0.5, -0.5],
+                                 rolls=[0, 0],
                                  sleep_after_point_reached=0.3)
         # spot.make_stance(0.5, 0)
         # spot.make_stance(0, 0.5)
@@ -62,10 +62,10 @@ def perform_griddy(controller):
 
     # Step 3: Add head bobbing with pitch control (up and down movement)
     for _ in range(4):
-        controller.move_head_in_points(yaws=[0], pitches=[0.3, -0.3], rolls=[0], sleep_after_point_reached=0.3)  # Head bob
+        controller.move_head_in_points(yaws=[0, 0], pitches=[0.3, -0.3], rolls=[0, 0], sleep_after_point_reached=0.3)  # Head bob
 
     # Step 4: Add playful head yaw (looking side to side)
-    controller.move_head_in_points(yaws=[0.3, -0.3], pitches=[0], rolls=[0], sleep_after_point_reached=0.4)
+    controller.move_head_in_points(yaws=[0.3, -0.3], pitches=[0, 0], rolls=[0, 0], sleep_after_point_reached=0.4)
 
     # Step 5: End with a stance reset to neutral
     controller.stand_at_height(body_height=0.0)
