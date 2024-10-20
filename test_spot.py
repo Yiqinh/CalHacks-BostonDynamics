@@ -11,5 +11,7 @@ SPOT_PASSWORD = "2zqa8dgw7lor"#os.environ['SPOT_PASSWORD']
 
 if __name__ == '__main__':
     with SpotController(username=SPOT_USERNAME, password=SPOT_PASSWORD, robot_ip=ROBOT_IP) as spot:
-        spot.image()
+        spot.move_head_in_points(yaws=[0], pitches=[0.3], rolls=[0], sleep_after_point_reached=0.3)  # Head bob
+        spot.image(camera='hand')
+        print("image done")
     print("done")

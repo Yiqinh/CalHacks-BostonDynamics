@@ -52,11 +52,17 @@ class SpotController:
 
         self.image_client = self.robot.ensure_client(ImageClient.default_service_name)
 
-    def image(self):
-        print("testing image capture!")
+    def image(self, camera):
         #choices=['frontleft', 'frontright', 'left', 'right', 'back', 'hand']
-        camera = 'frontleft'
-        sources = [camera + '_depth_in_visual_frame', camera + '_fisheye_image']
+        to_depth = False
+        if camera != 'hand':
+            sources = [camera + '_depth_in_visual_frame', camera + '_fisheye_image']
+        else:
+            if to_depth:
+                sources = [camera + '_depth', camera + '_color_in_hand_depth_frame']
+            else:
+                sources = [camera + '_depth_in_hand_color_frame', camera + '_color_image']
+
         image_responses = self.image_client.get_image_from_sources(sources)
         if len(image_responses) < 2:
                 print('Error: failed to get images.')
@@ -68,8 +74,10 @@ class SpotController:
         visual_rgb = cv_visual if len(cv_visual.shape) == 3 else cv2.cvtColor(
         cv_visual, cv2.COLOR_GRAY2RGB)
 
-        # Map depth ranges to color
+        filename = f'/tmp/{camera}.jpg'
+        cv2.imwrite(filename, visual_rgb)
 
+        # Map depth ranges to color
         # cv2.applyColorMap() only supports 8-bit; convert from 16-bit to 8-bit and do scaling
         min_val = np.min(cv_depth)
         max_val = np.max(cv_depth)
@@ -81,18 +89,28 @@ class SpotController:
         # Add the two images together.
         out = cv2.addWeighted(visual_rgb, 0.5, depth_color, 0.5, 0)
 
-        auto_rotate = False
+        auto_rotate = True
         if auto_rotate:
-            if image_responses[0].source.name[0:5] == 'front':
+            if camera[0:5] == 'front':
                 out = cv2.rotate(out, cv2.ROTATE_90_CLOCKWISE)
-
-            elif image_responses[0].source.name[0:5] == 'right':
+            elif camera[0:5] == 'right':
                 out = cv2.rotate(out, cv2.ROTATE_180)
 
         # Write the image out.
-        filename = f'/tmp/{camera}.jpg'
-        cv2.imwrite(filename, out)
+        # filename = f'/tmp/{camera}.jpg'
+        # cv2.imwrite(filename, visual_rgb)
+        #return visual_rgb
 
+    def follow_head(self):
+        center = self.find_person()
+        while center != [0, 0]:
+            movement = [0, 0] - center #up/down, left/right
+            #MOVE THE HEAD BY MOVEMENT
+            return
+
+    def find_person(self):
+        #find a person's face
+        return [0, 0]
 
     def release_estop(self):
         self._estop_endpoint.force_simple_setup()
