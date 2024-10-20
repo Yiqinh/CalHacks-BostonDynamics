@@ -10,9 +10,10 @@ from bosdyn.client.robot_state import RobotStateClient
 from bosdyn.client.frame_helpers import ODOM_FRAME_NAME, VISION_FRAME_NAME, BODY_FRAME_NAME, \
     GRAV_ALIGNED_BODY_FRAME_NAME, get_se2_a_tform_b
 from bosdyn.client import math_helpers
+import keyboard
+import time
 
 import traceback
-
 import sys
 
 import cv2
@@ -49,7 +50,6 @@ class SpotController:
         self._estop_keepalive = None
 
         self.state_client = self.robot.ensure_client(RobotStateClient.default_service_name)
-
         self.image_client = self.robot.ensure_client(ImageClient.default_service_name)
 
     def image(self, camera):
@@ -74,9 +74,6 @@ class SpotController:
         visual_rgb = cv_visual if len(cv_visual.shape) == 3 else cv2.cvtColor(
         cv_visual, cv2.COLOR_GRAY2RGB)
 
-        filename = f'/tmp/{camera}.jpg'
-        cv2.imwrite(filename, visual_rgb)
-
         # Map depth ranges to color
         # cv2.applyColorMap() only supports 8-bit; convert from 16-bit to 8-bit and do scaling
         min_val = np.min(cv_depth)
@@ -93,13 +90,17 @@ class SpotController:
         if auto_rotate:
             if camera[0:5] == 'front':
                 out = cv2.rotate(out, cv2.ROTATE_90_CLOCKWISE)
+                visual_rgb = cv2.rotate(visual_rgb, cv2.ROTATE_90_CLOCKWISE)
+                depth8 = cv2.rotate(depth8, cv2.ROTATE_90_CLOCKWISE)
+
             elif camera[0:5] == 'right':
                 out = cv2.rotate(out, cv2.ROTATE_180)
+                visual_rgb = cv2.rotate(visual_rgb, cv2.ROTATE_180)
+                depth8 = cv2.rotate(depth8, cv2.ROTATE_180)
 
-        # Write the image out.
-        # filename = f'/tmp/{camera}.jpg'
-        # cv2.imwrite(filename, visual_rgb)
-        #return visual_rgb
+        filename = f'/tmp/test.jpg'
+        cv2.imwrite(filename, visual_rgb)
+        return visual_rgb, depth8
 
     def follow_head(self):
         center = self.find_person()
@@ -107,6 +108,22 @@ class SpotController:
             movement = [0, 0] - center #up/down, left/right
             #MOVE THE HEAD BY MOVEMENT
             return
+    
+    def manual_control(self):
+        while True:
+            if keyboard.is_pressed('up'):
+                self.move_by_velocity_control(v_x=0.1, v_y=0, v_rot=0, cmd_duration=2)
+            elif keyboard.is_pressed('down'):
+                self.move_by_velocity_control(v_x=-0.1, v_y=0, v_rot=0, cmd_duration=2)
+            elif keyboard.is_pressed('left'):
+                self.move_by_velocity_control(v_x=0, v_y=0.1, v_rot=0, cmd_duration=2)
+            elif keyboard.is_pressed('right'):
+                self.move_by_velocity_control(v_x=0, v_y=-0.1, v_rot=0, cmd_duration=2)
+            elif keyboard.is_pressed('q'):
+                print("Quitting control.")
+                break
+            # Small delay to avoid excessive commands
+            time.sleep(0.1)
 
     def find_person(self):
         #find a person's face
