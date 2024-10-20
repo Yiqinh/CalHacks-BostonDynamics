@@ -13,6 +13,11 @@ def main():
     with SpotController(username=SPOT_USERNAME, password=SPOT_PASSWORD, robot_ip=ROBOT_IP) as spot:
 
         perform_griddy(spot)
+        # look_up_walk(spot)
+
+def look_up_walk(controller):
+    controller.stand_at_height(body_height=0.0)
+    time.sleep(1)
 
 
 def perform_griddy(controller):
@@ -20,9 +25,9 @@ def perform_griddy(controller):
     controller.stand_at_height(body_height=0.0)
     time.sleep(1)
 
-    controller.make_stance(x_offset=0.1, y_offset=0)
+    controller.make_stance(x_offset=0.0, y_offset=0.05)
     time.sleep(2)
-    controller.make_stance(x_offset=-0.1, y_offset=0)
+    controller.make_stance(x_offset=0.0, y_offset=-0.05)
     time.sleep(2)
 
     # Step 2: Simulate skipping footwork using velocity control and leg lifting
