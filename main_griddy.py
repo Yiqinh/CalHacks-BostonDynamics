@@ -21,9 +21,8 @@ def perform_griddy(controller):
     time.sleep(1)
 
     controller.move_head_in_points(yaws=[0], pitches=[0.3], rolls=[0], sleep_after_point_reached=0.3)
-    time.sleep(1)
 
-    controller.move_to_goal(goal_x=0, goal_y=1)
+    controller.move_to_goal(goal_x=1, goal_y=0)
     time.sleep(1)
 
     # Step 2: Simulate skipping footwork using velocity control and leg lifting
