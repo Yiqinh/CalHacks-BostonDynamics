@@ -32,37 +32,23 @@ def main():
     # and to return lease + sit down at the end
     with SpotController(username=SPOT_USERNAME, password=SPOT_PASSWORD, robot_ip=ROBOT_IP) as spot:
 
-        time.sleep(2)
-        # Move head to specified positions with intermediate time.sleep
-        spot.move_head_in_points(yaws=[0, 0],
-                                 pitches=[0.5, -0.5],
-                                 rolls=[0, 0],
-                                 sleep_after_point_reached=0.3)
-        # spot.make_stance(0.5, 0)
-        # spot.make_stance(0, 0.5)
-        # spot.make_stance(-0.5, 0)
-        # spot.make_stance(0, -0.5)
-        # spot.make_stance(1, 0)
-        # spot.make_stance(0, 1)
-        # spot.make_stance(-1, 0)
-        # spot.make_stance(0, -1)
-
-        # spot.move_by_velocity_control(0, 0, math.pi / 4, 8)
-
         perform_griddy(spot)
 
 def perform_griddy(controller):
     # Step 1: Stand up and set a neutral stance
-    controller.stand_at_height(body_height=0.0)
+    #controller.stand_at_height(body_height=0.0)
 
     # Step 2: Simulate the skipping footwork using velocity control
     for _ in range(4):
-        controller.move_by_velocity_control(v_x=0.4, v_y=0.0, cmd_duration=0.4)  # Forward skip
+        controller.move_by_velocity_control(v_x=0.4, v_y=0.0, cmd_duration=2)  # Forward skip
+        time.sleep(1)
         controller.move_by_velocity_control(v_x=0.0, v_y=0.4, cmd_duration=0.4)  # Side step
+        time.sleep(1)
 
     # Step 3: Add head bobbing with pitch control (up and down movement)
     for _ in range(4):
         controller.move_head_in_points(yaws=[0, 0], pitches=[0.3, -0.3], rolls=[0, 0], sleep_after_point_reached=0.3)  # Head bob
+        time.sleep(1)
 
     # Step 4: Add playful head yaw (looking side to side)
     controller.move_head_in_points(yaws=[0.3, -0.3], pitches=[0, 0], rolls=[0, 0], sleep_after_point_reached=0.4)
