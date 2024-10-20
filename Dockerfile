@@ -17,4 +17,4 @@ COPY requirements.txt requirements.txt
 RUN python3.8 -m pip install -r requirements.txt
 COPY . .
 
-CMD ["python3.8", "main.py"]
+CMD ["python3.8", "test_spot.py"]
